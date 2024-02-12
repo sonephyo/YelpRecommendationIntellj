@@ -18,8 +18,12 @@ ___
 ### Setting up IDE
 
 - Have IntellJ Installed on your device
-- Clone the Repo at desired location
+
+- Clone the repo (for collaborators only) by click on Get From Version Control
+<img src="https://ibb.co/9Z9PCcb" alt="image>
+
 - Open the cloned folder
 - Create a package in the src folder called **database** (Instruction - right click on the src folder &rarr; New &rarr; package )
 - Add the json files, **business** and **reviews** json inside database folder you created
+- rename (yelp_academic_dataset_business.json to **businesses.json**, yelp_academic_dataset_review.json to **reviews.json**)
 
