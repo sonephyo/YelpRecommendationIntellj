@@ -20,8 +20,10 @@ ___
 - Have IntellJ Installed on your device
 
 - Clone the repo (for collaborators only) by click on Get From Version Control
-  ![repo image](https://ibb.co/9Z9PCcb)
 
+  ![repo image](https://i.ibb.co/NT6RHt9/Screenshot-2024-02-12-at-2-22-29-PM.png)
+
+- Set up by placing the following url <a href="https://github.com/sonephyo/YelpRecommendationIntellj.git">https://github.com/sonephyo/YelpRecommendationIntellj.git</a>
 - Open the cloned folder
 - Create a package in the src folder called **database** (Instruction - right click on the src folder &rarr; New &rarr; package )
 - Add the json files, **business** and **reviews** json inside database folder you created
