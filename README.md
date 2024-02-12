@@ -13,9 +13,16 @@ ___
 
 **Libraries** <ul><li>Gson for JSON parsing<a href= "https://search.maven.org/artifact/com.google.code.gson/gson/2.10.1/jar?eh=">(Link to download)</a><li>Swing for GUI</li></ul>
 
+**Data**
+
+- 
+
 ### Setting up IDE
 
 - Have IntellJ Installed on your device
-- 
+- Clone the Repo at desired location
+- Open the cloned folder
+- Create a package in the src folder called **database** (Instruction - right click on the src folder &rarr; New &rarr; package )
+- Add fo
 
 
