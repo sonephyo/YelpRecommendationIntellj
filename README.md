@@ -20,7 +20,7 @@ ___
 - Have IntellJ Installed on your device
 
 - Clone the repo (for collaborators only) by click on Get From Version Control
-<img src="https://ibb.co/9Z9PCcb" alt="image>
+  ![repo image](https://ibb.co/9Z9PCcb)
 
 - Open the cloned folder
 - Create a package in the src folder called **database** (Instruction - right click on the src folder &rarr; New &rarr; package )
