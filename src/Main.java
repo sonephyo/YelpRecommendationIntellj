@@ -41,8 +41,9 @@ public class Main {
             Review r1 = gsonReview.fromJson(lineReview, Review.class);
             System.out.println(r1);
             reviewcount++;
-
         }
+
+
 
 
 
