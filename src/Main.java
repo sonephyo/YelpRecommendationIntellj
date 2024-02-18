@@ -6,7 +6,10 @@ import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -37,16 +40,46 @@ public class Main {
 
         String lineReview;
         int reviewcount = 0;
-        while ((lineReview = brReview.readLine()) != null && reviewcount <=1000) {
+        int reviewLengthToParse = 100;
+
+        Review[] reviewList = new Review[reviewLengthToParse];
+        while ((lineReview = brReview.readLine()) != null && reviewcount < reviewLengthToParse) {
             Review r1 = gsonReview.fromJson(lineReview, Review.class);
-            System.out.println(r1);
+//            System.out.println(r1);
+            reviewList[reviewcount] = r1;
             reviewcount++;
-            System.out.println("hello world");
+        }
+
+        String userInput = "a";
+        String[] inputSplit = cleanString(userInput);
+
+//        System.out.println(reviewList[1].getReview_text());
+
+//        for (Review r: reviewList) {
+//            System.out.println(r.getReview_text());
+//        }
+
+
+        String reviewRaw = reviewList[1].getReview_text();
+
+        //*** Data Cleaning ***//
+        String[] clearString = cleanString(reviewRaw);
+
+        int sameCount = 0;
+        for(String i: clearString) {
+            for (String j: inputSplit) {
+                if (j.equalsIgnoreCase(i)) {
+                    sameCount++;
+                }
+            }
         }
 
 
+    }
 
+    private static String[] cleanString(String rawString) {
+        rawString = rawString.replaceAll("[^a-zA-Z0-9]", " ");
 
-
+        return rawString.split("\\s+");
     }
 }
