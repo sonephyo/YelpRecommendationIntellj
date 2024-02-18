@@ -7,7 +7,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,46 +42,100 @@ public class Main {
 
         String lineReview;
         int reviewcount = 0;
-        int reviewLengthToParse = 100;
+        int reviewLengthToParse = 10000;
 
         Review[] reviewList = new Review[reviewLengthToParse];
+
         while ((lineReview = brReview.readLine()) != null && reviewcount < reviewLengthToParse) {
             Review r1 = gsonReview.fromJson(lineReview, Review.class);
-//            System.out.println(r1);
             reviewList[reviewcount] = r1;
             reviewcount++;
         }
 
-        String userInput = "a";
+        long startTime = System.nanoTime();
+
+        String userInput = "asian food";
         String[] inputSplit = cleanString(userInput);
-
-//        System.out.println(reviewList[1].getReview_text());
-
-//        for (Review r: reviewList) {
-//            System.out.println(r.getReview_text());
-//        }
+//        System.out.println(Arrays.toString(inputSplit));
 
 
-        String reviewRaw = reviewList[1].getReview_text();
+        int[] dfCount = new int[inputSplit.length];
+        for(Review review: reviewList) {
+            review.init_FreqTableForEachReview(inputSplit);
+            String[] cleanReviewData = cleanString(review.getReview_text());
+//            System.out.println(Arrays.toString(cleanReviewData));
 
-        //*** Data Cleaning ***//
-        String[] clearString = cleanString(reviewRaw);
 
-        int sameCount = 0;
-        for(String i: clearString) {
-            for (String j: inputSplit) {
-                if (j.equalsIgnoreCase(i)) {
-                    sameCount++;
+            for(String i: cleanReviewData) {
+                for(int j = 0; j < inputSplit.length; j++) {
+                    if (inputSplit[j].equalsIgnoreCase(i)){
+                        review.incrementCountOfEach(j);
+                        review.setTrueContainsWord(j);
+                    }
                 }
             }
+            for(int i = 0; i < review.getContainsWord().length; i++) {
+                if(review.getContainsWord()[i]) {
+                    dfCount[i]++;
+                }
+            }
+
+//            System.out.println(Arrays.toString(review.getContainsWord()));
+//            System.out.println(Arrays.toString(review.getCountOfEachWord()));
         }
+//        System.out.println(Arrays.toString(dfCount));
+
+        for(Review r:reviewList) {
+            r.setTotalWeight(calculateWeight(r.getCountOfEachWord(),dfCount,reviewLengthToParse));
+//            System.out.println(r.getTotalWeight());
+        }
+
+        Arrays.sort(reviewList, new Comparator<Review>() {
+            @Override
+            public int compare(Review r1, Review r2) {
+                return Double.compare(r2.getTotalWeight(), r1.getTotalWeight());
+            }
+        });
+
+        long endTime = System.nanoTime();
+
+        long totalTime = endTime - startTime;
+        double milliseconds = totalTime / 1e6;
+        System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(reviewList[i].getTotalWeight());
+            System.out.println(reviewList[i]);
+            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+
+        }
+
+
+
+
+
 
 
     }
 
-    private static String[] cleanString(String rawString) {
-        rawString = rawString.replaceAll("[^a-zA-Z0-9]", " ");
+    private static double calculateWeight(int[] tfData,int[] dfData, int totalReview) {
+        double total = 0;
+        for (int i = 0; i < tfData.length; i++) {
+            total += Math.log10(1+tfData[i])*((double) totalReview /dfData[i]);
+        }
+        return total;
+    }
 
-        return rawString.split("\\s+");
+
+
+    private static String[] cleanString(String rawString) {
+        rawString = rawString.replaceAll("[^a-zA-Z]", " ");
+        rawString = rawString.replaceAll("\\b(to|a|the|and|there|in|is|are|for|I|we|on|would|have)\\b", " ");
+        rawString = rawString.toLowerCase(Locale.ROOT);
+
+
+        return Arrays.stream(rawString.split("\\s+")).filter(s -> !s.isEmpty()).toArray(String[]::new);
+
     }
 }
