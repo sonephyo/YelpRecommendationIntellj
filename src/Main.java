@@ -26,13 +26,15 @@ public class Main {
         Gson gson = gb.create();
         String line;
 
+        long startTime = System.nanoTime();
+
+
         // Making the hashtable for the businesses
-        int count = 0;
+
         Hashtable<String, Business> businessHashtable = new Hashtable<>();
-        while ((line = br.readLine()) != null && count <=10000) {
+        while ((line = br.readLine()) != null) {
             Business b1 = gson.fromJson(line, Business.class);
             businessHashtable.put(b1.getBusiness_id(), b1);
-            count++;
         }
 
         BufferedReader brReview = new BufferedReader(new FileReader("src/database/reviews.json"));
@@ -52,7 +54,6 @@ public class Main {
             reviewcount++;
         }
 
-        long startTime = System.nanoTime();
 
         String userInput = "asian food";
         String[] inputSplit = cleanString(userInput);
@@ -103,19 +104,17 @@ public class Main {
         double milliseconds = totalTime / 1e6;
         System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
 
-        for (int i = 0; i < 3; i++) {
+
+        // Output Number
+        int outputNumber = 2;
+        for (int i = 0; i < outputNumber; i++) {
             System.out.println(reviewList[i].getTotalWeight());
-            System.out.println(reviewList[i]);
-            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
-            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
-
+//            System.out.println(reviewList[i].getBusiness_id());
+//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+            Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
+            System.out.println(businessOutput.getName());
         }
-
-
-
-
-
-
 
     }
 
