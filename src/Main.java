@@ -6,7 +6,12 @@ import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 
 public class Main {
 
@@ -37,16 +42,17 @@ public class Main {
 
         String lineReview;
         int reviewcount = 0;
+        List<Review> reviewList = new ArrayList<>();
         while ((lineReview = brReview.readLine()) != null && reviewcount <=1000) {
             Review r1 = gsonReview.fromJson(lineReview, Review.class);
-            System.out.println(r1);
+            reviewList.add(r1);
+            //System.out.println(r1);
             reviewcount++;
 
         }
-
-
-
-
-
+        Gson gsonWrite = new GsonBuilder().setPrettyPrinting().create();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter ("src/database/review1.json"))){
+            gsonWrite.toJson(reviewList, writer);
+        }
     }
 }
