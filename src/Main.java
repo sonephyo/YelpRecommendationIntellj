@@ -110,13 +110,6 @@ public class Main {
             System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
 
         }
-
-
-
-
-
-
-
     }
 
     private static double calculateWeight(int[] tfData,int[] dfData, int totalReview) {
