@@ -26,17 +26,20 @@ public class Main {
         Gson gson = gb.create();
         String line;
 
-        long startTime = System.nanoTime();
+//        long startTime = System.nanoTime();
 
 
         // Making the hashtable for the businesses
-
         Hashtable<String, Business> businessHashtable = new Hashtable<>();
         while ((line = br.readLine()) != null) {
             Business b1 = gson.fromJson(line, Business.class);
             businessHashtable.put(b1.getBusiness_id(), b1);
         }
 
+
+
+
+        // For review
         BufferedReader brReview = new BufferedReader(new FileReader("src/database/reviews.json"));
 
         GsonBuilder gbReview = new GsonBuilder();
@@ -98,11 +101,10 @@ public class Main {
             }
         });
 
-        long endTime = System.nanoTime();
-
-        long totalTime = endTime - startTime;
-        double milliseconds = totalTime / 1e6;
-        System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
+//        long endTime = System.nanoTime();
+//        long totalTime = endTime - startTime;
+//        double milliseconds = totalTime / 1e6;
+//        System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
 
 
         // Output Number
