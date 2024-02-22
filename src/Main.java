@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
 
-    private JTextField userInputField;
+    private JComboBox<String> userInputField;
     private JButton searchButton;
     private JTextArea resultArea;
 
@@ -28,7 +28,24 @@ public class Main extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        userInputField = new JTextField(20);
+        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+        comboBoxModel.addElement(("Moon's Kitchen Cafe"));
+        comboBoxModel.addElement(("Tutti Frutti Frozen Yogurt"));
+        comboBoxModel.addElement(("Blues City Deli"));
+        comboBoxModel.addElement(("Greko Greek Street Food"));
+        comboBoxModel.addElement(("Enterprise Rent-A-Car"));
+        comboBoxModel.addElement(("EATS! American Grill"));
+        comboBoxModel.addElement(("Gravity Defying Fitness"));
+        comboBoxModel.addElement(("Rescue Spa"));
+        comboBoxModel.addElement(("Helena Avenue Bakery"));
+        comboBoxModel.addElement(("David's Bridal"));
+
+        userInputField = new JComboBox<>(comboBoxModel);
+        userInputField.setEditable(true);
+        resultArea = new JTextArea();
+
+
+
         searchButton = new JButton("Search");
         resultArea = new JTextArea();
 
@@ -93,7 +110,7 @@ public class Main extends JFrame {
             }
 
 
-            String userInput = userInputField.getText();
+            String userInput = userInputField.getSelectedItem().toString();
             String[] inputSplit = cleanString(userInput);
 //        System.out.println(Arrays.toString(inputSplit));
 
