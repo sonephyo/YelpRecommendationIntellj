@@ -33,7 +33,7 @@ public class Main extends JFrame {
         resultArea = new JTextArea();
 
         JPanel inputPanel = new JPanel(new FlowLayout());
-        inputPanel.add(new JLabel("Enter your preference: "));
+        inputPanel.add(new JLabel("Enter a business name:  "));
         inputPanel.add(userInputField);
         inputPanel.add(searchButton);
         add(inputPanel, BorderLayout.NORTH);
@@ -88,7 +88,7 @@ public class Main extends JFrame {
                 Review r1 = gsonReview.fromJson(lineReview, Review.class);
                 reviewList[reviewcount] = r1;
                 r1.setBusiness_name(businessHashtable.get(r1.getBusiness_id()).getName());
-                System.out.println(r1);
+                //System.out.println(r1);
                 reviewcount++;
             }
 
