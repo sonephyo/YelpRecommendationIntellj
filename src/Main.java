@@ -87,6 +87,8 @@ public class Main extends JFrame {
             while ((lineReview = brReview.readLine()) != null && reviewcount < reviewLengthToParse) {
                 Review r1 = gsonReview.fromJson(lineReview, Review.class);
                 reviewList[reviewcount] = r1;
+                r1.setBusiness_name(businessHashtable.get(r1.getBusiness_id()).getName());
+                System.out.println(r1);
                 reviewcount++;
             }
 
