@@ -30,15 +30,15 @@ public class Main extends JFrame {
 
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
         comboBoxModel.addElement(("Moon's Kitchen Cafe"));
-        comboBoxModel.addElement(("Tutti Frutti Frozen Yogurt"));
+        comboBoxModel.addElement(("Thai Legacy Restaurant"));
         comboBoxModel.addElement(("Blues City Deli"));
-        comboBoxModel.addElement(("Greko Greek Street Food"));
+        comboBoxModel.addElement(("New India's Kitchen"));
         comboBoxModel.addElement(("Enterprise Rent-A-Car"));
         comboBoxModel.addElement(("EATS! American Grill"));
-        comboBoxModel.addElement(("Gravity Defying Fitness"));
-        comboBoxModel.addElement(("Rescue Spa"));
         comboBoxModel.addElement(("Helena Avenue Bakery"));
-        comboBoxModel.addElement(("David's Bridal"));
+        comboBoxModel.addElement(("Yolklore"));
+        comboBoxModel.addElement(("Zimmer's Seafood"));
+        comboBoxModel.addElement(("Target"));
 
         userInputField = new JComboBox<>(comboBoxModel);
         userInputField.setEditable(true);
@@ -164,7 +164,7 @@ public class Main extends JFrame {
             for (int i = 0; i < outputNumber; i++) {
                 double totalWeight = reviewList[i].getTotalWeight();
                 Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
-                resultArea.append("Business names: " + businessOutput.getName() + "\n");
+                resultArea.append("Business name: " + businessOutput.getName() + "\n");
             }
         }catch (IOException e){
             e.printStackTrace();
