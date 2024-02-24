@@ -70,16 +70,13 @@ public class Main extends JFrame {
     private void search() {
         resultArea.setText("");
         try {
+
             BufferedReader br = new BufferedReader(new FileReader("src/database/businesses.json"));
-//        BufferedReader br = new BufferedReader(new FileReader("src/database/oneData.json"));
 
             // Building Gson
-
             GsonBuilder gb = new GsonBuilder();
             Gson gson = gb.create();
             String line;
-
-//        long startTime = System.nanoTime();
 
 
             // Making the hashtable for the businesses
@@ -103,47 +100,46 @@ public class Main extends JFrame {
 
             while ((lineReview = brReview.readLine()) != null && reviewcount < reviewLengthToParse) {
                 Review r1 = gsonReview.fromJson(lineReview, Review.class);
-                reviewList[reviewcount] = r1;
                 r1.setBusiness_name(businessHashtable.get(r1.getBusiness_id()).getName());
-                //System.out.println(r1);
+                reviewList[reviewcount] = r1;
                 reviewcount++;
             }
 
+            String userInput = userInputField.getSelectedItem().toString() ;
+            String userInputStoreReview = searchForStore(reviewList, userInput);
 
-            String userInput = userInputField.getSelectedItem().toString();
-            String[] inputSplit = cleanString(userInput);
-//        System.out.println(Arrays.toString(inputSplit));
+            System.out.println(userInputStoreReview);
 
+            reviewList = Arrays.stream(reviewList)
+                    .filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput)))
+                    .toArray(Review[]::new);
+
+            String[] inputSplit = cleanString(userInputStoreReview);
+            System.out.println(Arrays.toString(inputSplit));
 
             int[] dfCount = new int[inputSplit.length];
-            for(Review review: reviewList) {
+            for (Review review : reviewList) {
                 review.init_FreqTableForEachReview(inputSplit);
                 String[] cleanReviewData = cleanString(review.getReview_text());
-//            System.out.println(Arrays.toString(cleanReviewData));
 
 
-                for(String i: cleanReviewData) {
-                    for(int j = 0; j < inputSplit.length; j++) {
-                        if (inputSplit[j].equalsIgnoreCase(i)){
+                for (String i : cleanReviewData) {
+                    for (int j = 0; j < inputSplit.length; j++) {
+                        if (inputSplit[j].equalsIgnoreCase(i)) {
                             review.incrementCountOfEach(j);
                             review.setTrueContainsWord(j);
                         }
                     }
                 }
-                for(int i = 0; i < review.getContainsWord().length; i++) {
-                    if(review.getContainsWord()[i]) {
+                for (int i = 0; i < review.getContainsWord().length; i++) {
+                    if (review.getContainsWord()[i]) {
                         dfCount[i]++;
                     }
                 }
-
-//            System.out.println(Arrays.toString(review.getContainsWord()));
-//            System.out.println(Arrays.toString(review.getCountOfEachWord()));
             }
-//        System.out.println(Arrays.toString(dfCount));
 
-            for(Review r:reviewList) {
-                r.setTotalWeight(calculateWeight(r.getCountOfEachWord(),dfCount,reviewLengthToParse));
-//            System.out.println(r.getTotalWeight());
+            for (Review r : reviewList) {
+                r.setTotalWeight(calculateWeight(r.getCountOfEachWord(), dfCount, reviewLengthToParse));
             }
 
             Arrays.sort(reviewList, new Comparator<Review>() {
@@ -153,30 +149,29 @@ public class Main extends JFrame {
                 }
             });
 
-//        long endTime = System.nanoTime();
-//        long totalTime = endTime - startTime;
-//        double milliseconds = totalTime / 1e6;
-//        System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
-
 
             // Output Number
             int outputNumber = 2;
             for (int i = 0; i < outputNumber; i++) {
-                double totalWeight = reviewList[i].getTotalWeight();
+                System.out.println("__________");
+                System.out.println(reviewList[i].getTotalWeight());
+//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
                 Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
                 resultArea.append("Business name: " + businessOutput.getName() + "\n");
             }
-        }catch (IOException e){
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e){
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error",
+//                    JOptionPane.ERROR_MESSAGE);
+            resultArea.append("Store not found! Choose another one!");
         }
     }
 
     private static double calculateWeight(int[] tfData,int[] dfData, int totalReview) {
         double total = 0;
         for (int i = 0; i < tfData.length; i++) {
-            total += Math.log10(1+tfData[i])*((double) totalReview /dfData[i]);
+            total += Math.log10(1+tfData[i])*((double) totalReview /(dfData[i]+1));
         }
         return total;
     }
@@ -191,6 +186,15 @@ public class Main extends JFrame {
 
         return Arrays.stream(rawString.split("\\s+")).filter(s -> !s.isEmpty()).toArray(String[]::new);
 
+    }
+
+    private static String searchForStore(Review[] reviewList, String userInput) {
+        for (Review r: reviewList) {
+            if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
+                return r.getReview_text();
+            }
+        }
+        return null;
     }
 
     public static void main(String[] args){

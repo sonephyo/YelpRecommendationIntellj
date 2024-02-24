@@ -79,4 +79,8 @@ public class Review {
     public void setBusiness_name(String business_name) {
         this.business_name = business_name;
     }
+
+    public String getBusiness_name() {
+        return business_name;
+    }
 }
