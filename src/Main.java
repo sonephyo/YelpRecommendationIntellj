@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import javax.swing.*;
 
 public class Main {
@@ -57,7 +58,7 @@ public class Main {
             reviewcount++;
         }
 
-        String userInput = "Moon's Kitchen Cafe";
+        String userInput = "Thai Orchid";
         String userInputStoreReview = "";
         for (Review r: reviewList) {
             if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
@@ -74,9 +75,9 @@ public class Main {
 
         String[] inputSplit = cleanString(userInputStoreReview);
         System.out.println(Arrays.toString(inputSplit));
-        for (Review r: reviewList){
-            System.out.println(r.getBusiness_name());
-        }
+//        for (Review r: reviewList){
+//            System.out.println(r.getBusiness_name());
+//        }
 
         int[] dfCount = new int[inputSplit.length];
         for(Review review: reviewList) {
@@ -98,10 +99,19 @@ public class Main {
                     dfCount[i]++;
                 }
             }
-
-            //           System.out.println(Arrays.toString(review.getContainsWord()));
+//                       System.out.println(Arrays.toString(review.getContainsWord()));
 //            System.out.println(Arrays.toString(review.getCountOfEachWord()));
         }
+
+
+        for(int i = 0; i < dfCount.length; i++) {
+            if (dfCount[i] == 0) {
+                inputSplit = removeStringElement(inputSplit, i);
+                dfCount = removeIntElement(dfCount, i);
+            }
+        }
+
+
         //       System.out.println(Arrays.toString(dfCount));
 
         for(Review r:reviewList) {
@@ -127,8 +137,8 @@ public class Main {
         for (int i = 0; i < outputNumber; i++) {
             System.out.println(reviewList[i].getTotalWeight());
 //            System.out.println(reviewList[i].getBusiness_id());
-//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
-//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
             Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
             System.out.println(businessOutput.getName());
             System.out.println(businessOutput.getAddress());
@@ -157,4 +167,27 @@ public class Main {
         //git
 
     }
+
+    public static String[] removeStringElement(String[] arr, int index) {
+        if (index < 0 || index >= arr.length) {
+            // Index out of bounds
+            return arr;
+        }
+        return IntStream.range(0, arr.length)
+                .filter(i -> i != index)
+                .mapToObj(i -> arr[i])
+                .toArray(String[]::new);
+    }
+
+    public static int[] removeIntElement(int[] arr, int index) {
+        if (index < 0 || index >= arr.length) {
+            // Index out of bounds
+            return arr;
+        }
+        return IntStream.range(0, arr.length)
+                .filter(i -> i != index)
+                .map(i -> arr[i])
+                .toArray();
+    }
+
 }
