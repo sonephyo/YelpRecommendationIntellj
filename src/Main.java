@@ -20,15 +20,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader("src/database/businesses.json"));
-//        BufferedReader br = new BufferedReader(new FileReader("src/database/oneData.json"));
 
         // Building Gson
-
         GsonBuilder gb = new GsonBuilder();
         Gson gson = gb.create();
         String line;
-
-//        long startTime = System.nanoTime();
 
 
         // Making the hashtable for the businesses
@@ -54,11 +50,10 @@ public class Main {
             Review r1 = gsonReview.fromJson(lineReview, Review.class);
             r1.setBusiness_name(businessHashtable.get(r1.getBusiness_id()).getName());
             reviewList[reviewcount] = r1;
-            //System.out.println(r1);
             reviewcount++;
         }
 
-        String userInput = "Blues City De";
+        String userInput = "Rescue Spa";
         String userInputStoreReview = searchForStore(reviewList, userInput);
 
         System.out.println(userInputStoreReview);
@@ -69,15 +64,11 @@ public class Main {
 
         String[] inputSplit = cleanString(userInputStoreReview);
         System.out.println(Arrays.toString(inputSplit));
-//        for (Review r: reviewList){
-//            System.out.println(r.getBusiness_name());
-//        }
 
         int[] dfCount = new int[inputSplit.length];
         for(Review review: reviewList) {
             review.init_FreqTableForEachReview(inputSplit);
             String[] cleanReviewData = cleanString(review.getReview_text());
-//            System.out.println(Arrays.toString(cleanReviewData));
 
 
             for(String i: cleanReviewData) {
@@ -93,16 +84,10 @@ public class Main {
                     dfCount[i]++;
                 }
             }
-//                       System.out.println(Arrays.toString(review.getContainsWord()));
-//            System.out.println(Arrays.toString(review.getCountOfEachWord()));
         }
-
-
-        //       System.out.println(Arrays.toString(dfCount));
 
         for(Review r:reviewList) {
             r.setTotalWeight(calculateWeight(r.getCountOfEachWord(),dfCount,reviewLengthToParse));
-//            System.out.println(r.getTotalWeight());
         }
 
         Arrays.sort(reviewList, new Comparator<Review>() {
@@ -112,22 +97,16 @@ public class Main {
             }
         });
 
-//        long endTime = System.nanoTime();
-//        long totalTime = endTime - startTime;
-//        double milliseconds = totalTime / 1e6;
-//        System.out.println("--------------Elapsed time: " + milliseconds + " milliseconds");
-
 
         // Output Number
-        int outputNumber = 2;
+        int outputNumber = 10;
         for (int i = 0; i < outputNumber; i++) {
+            System.out.println("__________");
             System.out.println(reviewList[i].getTotalWeight());
-//            System.out.println(reviewList[i].getBusiness_id());
-            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
-            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
             Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
             System.out.println(businessOutput.getName());
-            System.out.println(businessOutput.getAddress());
         }
 
     }
@@ -149,17 +128,12 @@ public class Main {
 
 
         return Arrays.stream(rawString.split("\\s+")).filter(s -> !s.isEmpty()).toArray(String[]::new);
-        //
-        //git
-
     }
 
     private static String searchForStore(Review[] reviewList, String userInput) {
         for (Review r: reviewList) {
             if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
                 return r.getReview_text();
-                //System.out.println(userInputStoreReview);
-                //reviewList = Arrays.stream(reviewList).filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput))).toArray(Review[]::new);
             }
         }
         return null;
