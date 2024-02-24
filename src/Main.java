@@ -58,17 +58,11 @@ public class Main {
             reviewcount++;
         }
 
-        String userInput = "Thai Orchid";
-        String userInputStoreReview = "";
-        for (Review r: reviewList) {
-            if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
-                userInputStoreReview = r.getReview_text();
-                //System.out.println(userInputStoreReview);
-                //reviewList = Arrays.stream(reviewList).filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput))).toArray(Review[]::new);
-            }
+        String userInput = "Blues City De";
+        String userInputStoreReview = searchForStore(reviewList, userInput);
 
-        }
-//
+        System.out.println(userInputStoreReview);
+
         reviewList = Arrays.stream(reviewList)
                 .filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput)))
                 .toArray(Review[]::new);
@@ -158,6 +152,17 @@ public class Main {
         //
         //git
 
+    }
+
+    private static String searchForStore(Review[] reviewList, String userInput) {
+        for (Review r: reviewList) {
+            if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
+                return r.getReview_text();
+                //System.out.println(userInputStoreReview);
+                //reviewList = Arrays.stream(reviewList).filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput))).toArray(Review[]::new);
+            }
+        }
+        return null;
     }
 
 }
