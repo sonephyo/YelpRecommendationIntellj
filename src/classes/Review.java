@@ -12,6 +12,7 @@ public class Review {
     private double stars;
     private String text;
 
+    private String business_name;
 
 
     private int[] countOfEachWord;
@@ -52,9 +53,9 @@ public class Review {
     @Override
     public String toString() {
         return "Review{" +
+                ", business_name='" + business_name + '\'' +
                 "business_id='" + business_id + '\'' +
-                ", stars=" + stars +
-                ", review_text='" + text + '\'' +
+                ", text='" + text + '\'' +
                 '}';
     }
 
@@ -75,5 +76,11 @@ public class Review {
         this.containsWord[changeIndex] = true;
     }
 
+    public void setBusiness_name(String business_name) {
+        this.business_name = business_name;
+    }
 
+    public String getBusiness_name() {
+        return business_name;
+    }
 }
