@@ -104,14 +104,6 @@ public class Main {
         }
 
 
-        for(int i = 0; i < dfCount.length; i++) {
-            if (dfCount[i] == 0) {
-                inputSplit = removeStringElement(inputSplit, i);
-                dfCount = removeIntElement(dfCount, i);
-            }
-        }
-
-
         //       System.out.println(Arrays.toString(dfCount));
 
         for(Review r:reviewList) {
@@ -149,7 +141,7 @@ public class Main {
     private static double calculateWeight(int[] tfData,int[] dfData, int totalReview) {
         double total = 0;
         for (int i = 0; i < tfData.length; i++) {
-            total += Math.log10(1+tfData[i])*((double) totalReview /dfData[i]);
+            total += Math.log10(1+tfData[i])*((double) totalReview /(dfData[i]+1));
         }
         return total;
     }
@@ -166,28 +158,6 @@ public class Main {
         //
         //git
 
-    }
-
-    public static String[] removeStringElement(String[] arr, int index) {
-        if (index < 0 || index >= arr.length) {
-            // Index out of bounds
-            return arr;
-        }
-        return IntStream.range(0, arr.length)
-                .filter(i -> i != index)
-                .mapToObj(i -> arr[i])
-                .toArray(String[]::new);
-    }
-
-    public static int[] removeIntElement(int[] arr, int index) {
-        if (index < 0 || index >= arr.length) {
-            // Index out of bounds
-            return arr;
-        }
-        return IntStream.range(0, arr.length)
-                .filter(i -> i != index)
-                .map(i -> arr[i])
-                .toArray();
     }
 
 }
