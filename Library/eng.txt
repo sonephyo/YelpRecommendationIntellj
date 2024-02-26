@@ -1,6 +1,8 @@
 a
 an
+and
 above
+also
 about
 across
 again
@@ -69,7 +71,7 @@ her
 herself
 himself
 however
-I
+i
 if
 indeed
 into
@@ -111,11 +113,13 @@ otherwise
 our
 ours
 over
+out
 perhaps
 please
 put
 rather
 so
+soon
 seems
 seemed
 seem
@@ -172,12 +176,14 @@ your
 yours
 yourself
 yourselves
+'s
 ‘ll
 ‘ve
 c’mon
 ain’t
 don’t
 aren’t
+shouldn't
 doesn’t
 can’t
 couldn’t

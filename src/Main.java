@@ -6,10 +6,16 @@ import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -53,7 +59,7 @@ public class Main {
             reviewcount++;
         }
 
-        String userInput = "Rescue Spa";
+        String userInput = "LEX Nightclub";
         String userInputStoreReview = searchForStore(reviewList, userInput);
 
         System.out.println(userInputStoreReview);
@@ -123,10 +129,18 @@ public class Main {
 
     private static String[] cleanString(String rawString) {
         rawString = rawString.replaceAll("[^a-zA-Z]", " ");
-        rawString = rawString.replaceAll("\\b(to|a|the|and|there|in|is|are|for|I|we|on|would|have)\\b", " ");
+        //rawString = rawString.replaceAll("\\b(to|a|the|and|there|in|is|are|for|I|we|on|would|have)\\b", " ");
         rawString = rawString.toLowerCase(Locale.ROOT);
-
-
+        try
+            {
+                String wordTxt = Files.readString(Paths.get("Library/eng.txt"), Charset.defaultCharset());
+                String[] words = wordTxt.split("\\s");
+                for (String word : words){
+                    rawString = rawString.replaceAll("\\b" + word +"\\b", "");
+                }
+            } catch (IOException e){
+            e.printStackTrace();
+        }
         return Arrays.stream(rawString.split("\\s+")).filter(s -> !s.isEmpty()).toArray(String[]::new);
     }
 
