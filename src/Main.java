@@ -6,6 +6,9 @@ import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Hashtable;
@@ -56,17 +59,13 @@ public class Main extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(resultArea), BorderLayout.CENTER);
 
-        searchButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                search();
-            }
-        });
+        searchButton.addActionListener(e -> search());
         pack();
         setLocationRelativeTo(null);
 
 
     }
+
     private void search() {
         resultArea.setText("");
         try {
@@ -79,21 +78,21 @@ public class Main extends JFrame {
             String line;
 
 
-            // Making the hashtable for the businesses
+            // Making the hashtable for the businesses to connect reviews and businesses with id
             Hashtable<String, Business> businessHashtable = new Hashtable<>();
             while ((line = br.readLine()) != null) {
                 Business b1 = gson.fromJson(line, Business.class);
                 businessHashtable.put(b1.getBusiness_id(), b1);
             }
 
-            // For review
+            // Building Gson for review
             BufferedReader brReview = new BufferedReader(new FileReader("src/database/reviews.json"));
-
             GsonBuilder gbReview = new GsonBuilder();
             Gson gsonReview = gbReview.create();
 
+            // Making a table for reviews and taking track of the total number of reviews
             String lineReview;
-            int reviewcount = 0;
+            int reviewcount = 0; // Number of reviews, n
             int reviewLengthToParse = 10000;
 
             Review[] reviewList = new Review[reviewLengthToParse];
@@ -105,23 +104,25 @@ public class Main extends JFrame {
                 reviewcount++;
             }
 
+
+            // Getting user input and cleaning the string
             String userInput = userInputField.getSelectedItem().toString() ;
             String userInputStoreReview = searchForStore(reviewList, userInput);
 
-            System.out.println(userInputStoreReview);
-
             reviewList = Arrays.stream(reviewList)
                     .filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput)))
-                    .toArray(Review[]::new);
+                    .toArray(Review[]::new); // Removing the same store name that user inputs from the review list
 
             String[] inputSplit = cleanString(userInputStoreReview);
-            System.out.println(Arrays.toString(inputSplit));
 
+            // initializing for document frequency(df)
+            // Note: DF means Total Number of reviews that contain that word
             int[] dfCount = new int[inputSplit.length];
-            for (Review review : reviewList) {
-                review.init_FreqTableForEachReview(inputSplit);
-                String[] cleanReviewData = cleanString(review.getReview_text());
 
+            // Populating the frequency table with tf and (True/False) values for df
+            for (Review review : reviewList) {
+                review.init_FreqTableForEachReview(inputSplit); // initialize the frequency table depending on the user input
+                String[] cleanReviewData = cleanString(review.getReview_text());
 
                 for (String i : cleanReviewData) {
                     for (int j = 0; j < inputSplit.length; j++) {
@@ -131,6 +132,8 @@ public class Main extends JFrame {
                         }
                     }
                 }
+
+                // Calculating the df values from true or false values from frequency table
                 for (int i = 0; i < review.getContainsWord().length; i++) {
                     if (review.getContainsWord()[i]) {
                         dfCount[i]++;
@@ -138,10 +141,12 @@ public class Main extends JFrame {
                 }
             }
 
+            // Calculating the total weights for each review
             for (Review r : reviewList) {
                 r.setTotalWeight(calculateWeight(r.getCountOfEachWord(), dfCount, reviewLengthToParse));
             }
 
+            // Sorting the reviews by their total weight in descending orders
             Arrays.sort(reviewList, new Comparator<Review>() {
                 @Override
                 public int compare(Review r1, Review r2) {
@@ -150,24 +155,22 @@ public class Main extends JFrame {
             });
 
 
-            // Output Number
+            // Outputting two businesses with the highest total weight values.
             int outputNumber = 2;
             for (int i = 0; i < outputNumber; i++) {
-                System.out.println("__________");
-                System.out.println(reviewList[i].getTotalWeight());
-//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
-//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+//                System.out.println("__________");
+//                System.out.println(reviewList[i].getTotalWeight());
+//                System.out.println(reviewList[i].getReview_text());
                 Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
                 resultArea.append("Business name: " + businessOutput.getName() + "\n");
             }
+
         } catch (Exception e){
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error",
-//                    JOptionPane.ERROR_MESSAGE);
             resultArea.append("Store not found! Choose another one!");
         }
     }
 
+    // Method for calculating total weight
     private static double calculateWeight(int[] tfData,int[] dfData, int totalReview) {
         double total = 0;
         for (int i = 0; i < tfData.length; i++) {
@@ -176,18 +179,21 @@ public class Main extends JFrame {
         return total;
     }
 
+    // Cleaning the user input string and outputting a String array
+    private static String[] cleanString(String rawString) throws IOException {
+        rawString = rawString.replaceAll("[^a-zA-Z']", " ");
+        rawString = rawString.toLowerCase();
 
-
-    private static String[] cleanString(String rawString) {
-        rawString = rawString.replaceAll("[^a-zA-Z]", " ");
-        rawString = rawString.replaceAll("\\b(to|a|the|and|there|in|is|are|for|I|we|on|would|have)\\b", " ");
-        rawString = rawString.toLowerCase(Locale.ROOT);
-
-
+            String wordTxt = Files.readString(Paths.get("Library/eng.txt"), Charset.defaultCharset());
+            String[] words = wordTxt.split("\\s");
+            for (String word : words){
+                word = word.toLowerCase();
+                rawString = rawString.replaceAll("\\b" + word +"\\b", "");
+            }
         return Arrays.stream(rawString.split("\\s+")).filter(s -> !s.isEmpty()).toArray(String[]::new);
-
     }
 
+    // Check if the user inputted store exists in the dataset
     private static String searchForStore(Review[] reviewList, String userInput) {
         for (Review r: reviewList) {
             if (r.getBusiness_name().equalsIgnoreCase(userInput)) {
@@ -197,6 +203,7 @@ public class Main extends JFrame {
         return null;
     }
 
+    // To run the GUI
     public static void main(String[] args){
         SwingUtilities.invokeLater(new Runnable(){
             @Override

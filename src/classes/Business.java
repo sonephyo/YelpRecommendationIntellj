@@ -11,7 +11,6 @@ public class Business {
     private String address;
     private String state;
     private String postal_code;
-
     private double stars;
 
     public double getStars() {

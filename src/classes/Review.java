@@ -29,6 +29,9 @@ public class Review {
         return totalWeight;
     }
 
+    public String getBusiness_name() {
+        return business_name;
+    }
 
     public int[] getCountOfEachWord() {
         return countOfEachWord;
@@ -50,28 +53,6 @@ public class Review {
         return text;
     }
 
-    @Override
-    public String toString() {
-        return "Review{" +
-                ", business_name='" + business_name + '\'' +
-                "business_id='" + business_id + '\'' +
-                ", text='" + text + '\'' +
-                '}';
-    }
-
-    // Frequency Table
-    public void init_FreqTableForEachReview(String[] userInputData) {
-        countOfEachWord = new int[userInputData.length];
-        Arrays.fill(countOfEachWord, 0);
-
-        containsWord = new boolean[userInputData.length];
-        Arrays.fill(containsWord, false);
-    }
-
-    public void incrementCountOfEach(int incrementIndex) {
-        this.countOfEachWord[incrementIndex]++;
-    }
-
     public void setTrueContainsWord(int changeIndex) {
         this.containsWord[changeIndex] = true;
     }
@@ -80,7 +61,26 @@ public class Review {
         this.business_name = business_name;
     }
 
-    public String getBusiness_name() {
-        return business_name;
+    // Frequency Table Initializer
+    public void init_FreqTableForEachReview(String[] userInputData) {
+        countOfEachWord = new int[userInputData.length];
+        Arrays.fill(countOfEachWord, 0);
+
+        containsWord = new boolean[userInputData.length];
+        Arrays.fill(containsWord, false);
+    }
+
+    // Incrementing word count in frequency table
+    public void incrementCountOfEach(int incrementIndex) {
+        this.countOfEachWord[incrementIndex]++;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                ", business_name='" + business_name + '\'' +
+                "business_id='" + business_id + '\'' +
+                ", text='" + text + '\'' +
+                '}';
     }
 }
