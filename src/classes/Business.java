@@ -11,21 +11,10 @@ public class Business {
     private String address;
     private String state;
     private String postal_code;
-
     private double stars;
 
     public double getStars() {
         return stars;
-    }
-
-    private ArrayList<String> reviews;
-
-    public ArrayList<String> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(ArrayList<String> reviews) {
-        this.reviews = reviews;
     }
 
     public String getBusiness_id() {
@@ -57,7 +46,6 @@ public class Business {
                 ", state='" + state + '\'' +
                 ", postal_code='" + postal_code + '\'' +
                 ", stars=" + stars +
-                ", reviews=" + reviews +
                 '}';
     }
 }
