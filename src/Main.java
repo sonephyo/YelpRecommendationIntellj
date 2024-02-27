@@ -62,7 +62,7 @@ public class Main {
         String userInput = "LEX Nightclub";
         String userInputStoreReview = searchForStore(reviewList, userInput);
 
-        System.out.println(userInputStoreReview);
+//        System.out.println(userInputStoreReview);
 
         reviewList = Arrays.stream(reviewList)
                 .filter(s -> !(s.getBusiness_name().equalsIgnoreCase(userInput)))
@@ -94,6 +94,8 @@ public class Main {
 
         for(Review r:reviewList) {
             r.setTotalWeight(calculateWeight(r.getCountOfEachWord(),dfCount,reviewLengthToParse));
+            System.out.println(Arrays.toString(r.getCountOfEachWord()));
+            System.out.println(Arrays.toString(justTesting(r.getCountOfEachWord(), dfCount, reviewLengthToParse)));
         }
 
         Arrays.sort(reviewList, new Comparator<Review>() {
@@ -105,12 +107,12 @@ public class Main {
 
 
         // Output Number
-        int outputNumber = 10;
+        int outputNumber = 3;
         for (int i = 0; i < outputNumber; i++) {
             System.out.println("__________");
             System.out.println(reviewList[i].getTotalWeight());
-//            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
-//            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
+            System.out.println(Arrays.toString(reviewList[i].getContainsWord()));
+            System.out.println(Arrays.toString(reviewList[i].getCountOfEachWord()));
             Business businessOutput = businessHashtable.get(reviewList[i].getBusiness_id());
             System.out.println(businessOutput.getName());
         }
@@ -125,19 +127,41 @@ public class Main {
         return total;
     }
 
+    private static double[] justTesting(int[] tfData,int[] dfData, int totalReview) {
+        double[] total = new double[tfData.length];
+        for (int i = 0; i < tfData.length; i++) {
+            total[i] =  Math.log10(1+tfData[i])*((double) totalReview /(dfData[i]+1));
+        }
+        return total;
+    }
+
+
 
 
     private static String[] cleanString(String rawString) {
-        rawString = rawString.replaceAll("[^a-zA-Z]", " ");
+//        System.out.println("______Raw String________");
+//
+//        System.out.println(rawString);
+        rawString = rawString.replaceAll("[^a-zA-Z']", " ");
+
+
         //rawString = rawString.replaceAll("\\b(to|a|the|and|there|in|is|are|for|I|we|on|would|have)\\b", " ");
-        rawString = rawString.toLowerCase(Locale.ROOT);
+        rawString = rawString.toLowerCase();
+//        System.out.println("--------To lower case------");
+//
+//        System.out.println(rawString);
         try
             {
                 String wordTxt = Files.readString(Paths.get("Library/eng.txt"), Charset.defaultCharset());
                 String[] words = wordTxt.split("\\s");
                 for (String word : words){
+                    word = word.toLowerCase();
                     rawString = rawString.replaceAll("\\b" + word +"\\b", "");
                 }
+//                System.out.println("--Modified string----");
+//
+//                System.out.println(rawString);
+//                System.out.println("----");
             } catch (IOException e){
             e.printStackTrace();
         }
